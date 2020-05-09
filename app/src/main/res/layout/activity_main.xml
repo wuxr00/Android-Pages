@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+<!--
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_blue_bright">
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="prepare1"
+            android:text="prepare1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/button"
+            android:onClick="start"
+            android:text="start" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/button2"
+            android:onClick="prepare2"
+            android:text="prepare2" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/button3"
+            android:onClick="reverse"
+            android:text="reverse" />
+
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/button3">
+
+            <FrameLayout
+                android:id="@+id/v1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33000000">
+
+                <View
+                    android:id="@+id/sv1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_blue_bright"
+                    android:elevation="1dp" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/v2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33ffffff">
+
+                <View
+                    android:id="@+id/sv2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="right"
+                    android:background="@android:color/holo_green_dark"
+                    android:elevation="1dp" />
+
+            </FrameLayout>
+        </FrameLayout>
+    </RelativeLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

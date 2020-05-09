@@ -1,0 +1,3 @@
+rootProject.name='PagerLibProject'
+include ':app'
+include ':libpage'
