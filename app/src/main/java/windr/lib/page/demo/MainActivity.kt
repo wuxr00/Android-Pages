@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import windr.lib.page.*
@@ -35,7 +36,12 @@ class MainActivity : AppCompatActivity() {
             PageManager add MainPage() toPageManager pageManager
         }
 
+    }
 
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        return defaultDraggablePageSwitchGenerator.handleTouchEvent(ev)
+                || pageManager.handleTouchEvent(ev)
+                || super.dispatchTouchEvent(ev)
     }
 
     override fun onBackPressed() {

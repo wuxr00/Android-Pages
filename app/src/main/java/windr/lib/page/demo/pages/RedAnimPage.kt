@@ -159,18 +159,46 @@ class RedAnimPage : DefaultPage() {
                 })
                 addView(Button(getContext()).also {
                     blueButton = it
-                    it.text = "start blue page"
+                    it.text = "blue from top"
                     it.setOnClickListener {
-
-                        PageRouter show
-                                BluePage() withArguments
-                                Bundle().apply { putInt("data", sort + 1) } onStage
-                                PageRouter.MAIN
+                        PageRouter show BlueAnimPage() withArguments
+                                Bundle().apply { putInt("data", sort + 1) } withAnimation
+                                object : IPageAnimation {
+                                    override fun prepareAnimation(
+                                        topPage: IPage,
+                                        previousPage: IPage?
+                                    ) = flow<Animator> {
+                                        topPage.getView()?.translationY =
+                                            -AndroidUtilities.customScreenHeight.toFloat()
+                                        emit(AnimatorSet().apply {
+                                            val anim = ObjectAnimator.ofFloat(
+                                                topPage.getView(),
+                                                View.TRANSLATION_Y,
+                                                topPage.getView()!!.translationY,
+                                                0f
+                                            ).setDuration(350)
+                                            if (previousPage?.getView() != null)
+                                                playTogether(
+                                                    anim,
+                                                    ObjectAnimator.ofFloat(
+                                                        previousPage.getView(),
+                                                        View.TRANSLATION_Y,
+                                                        0f,
+                                                        AndroidUtilities.customScreenHeight.toFloat()
+                                                    ).setDuration(350)
+                                                )
+                                            else playTogether(anim)
+                                        }.onAnimEnd { canceled ->
+                                            if (canceled) topPage.getView()?.translationY = 0f
+                                            previousPage?.getView()?.translationY = 0f
+                                        })
+                                    }
+                                } onStage PageRouter.MAIN
                     }
                 })
                 addView(Button(getContext()).also {
                     blueAnimButton = it
-                    it.text = "blue from back"
+                    it.text = "blue from bottom"
                     it.setOnClickListener {
 
                         PageRouter show BlueAnimPage() withArguments
@@ -181,90 +209,31 @@ class RedAnimPage : DefaultPage() {
                                         previousPage: IPage?
                                     ) = flow<Animator> {
                                         topPage.getView()?.translationY =
-                                            -AndroidUtilities.customScreenWidth.toFloat()
+                                            AndroidUtilities.customScreenHeight.toFloat()
                                         emit(AnimatorSet().apply {
-                                            if (previousPage?.getView() != null) {
+                                            val anim = ObjectAnimator.ofFloat(
+                                                topPage.getView(),
+                                                View.TRANSLATION_Y,
+                                                topPage.getView()!!.translationY,
+                                                0f
+                                            ).setDuration(350)
+                                            if (previousPage?.getView() != null)
                                                 playTogether(
+                                                    anim,
                                                     ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.TRANSLATION_X,
+                                                        previousPage.getView(),
+                                                        View.TRANSLATION_Y,
                                                         0f,
-                                                        AndroidUtilities.customScreenWidth * 2 / 3f,
-                                                        0f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.TRANSLATION_Z,
-                                                        -10f,
-                                                        0f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.SCALE_X,
-                                                        0.7f,
-                                                        1f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.SCALE_Y,
-                                                        0.7f,
-                                                        1f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        previousPage.getView(),
-                                                        View.TRANSLATION_X,
-                                                        0f,
-                                                        -AndroidUtilities.customScreenWidth.toFloat()
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        previousPage.getView(),
-                                                        View.SCALE_X,
-                                                        1f,
-                                                        0.7f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        previousPage.getView(),
-                                                        View.SCALE_Y,
-                                                        1f,
-                                                        0.7f
+                                                        -AndroidUtilities.customScreenHeight.toFloat()
                                                     ).setDuration(350)
                                                 )
-
-                                            } else {
-                                                playTogether(
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.TRANSLATION_Z,
-                                                        -10f,
-                                                        0f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.SCALE_X,
-                                                        0.7f,
-                                                        1f
-                                                    ).setDuration(350),
-                                                    ObjectAnimator.ofFloat(
-                                                        topPage.getView(),
-                                                        View.SCALE_Y,
-                                                        0.7f,
-                                                        1f
-                                                    ).setDuration(350)
-                                                )
-                                            }
-
+                                            else playTogether(anim)
                                         }.onAnimEnd { canceled ->
-                                            if (canceled) {
-                                                topPage.getView()?.translationX = 0f
-                                                topPage.getView()?.translationZ = 0f
-                                                topPage.getView()?.scaleX = 1f
-                                                topPage.getView()?.scaleY = 1f
-                                            }
-                                            previousPage?.getView()?.translationX = 0f
-                                            previousPage?.getView()?.scaleX = 1f
-                                            previousPage?.getView()?.scaleY = 1f
+                                            if (canceled) topPage.getView()?.translationY = 0f
+                                            previousPage?.getView()?.translationY = 0f
                                         })
                                     }
+
                                 } onStage PageRouter.MAIN
                     }
                 })

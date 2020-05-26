@@ -88,20 +88,20 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
                 if (!handlePageMoving) {
                     val moveY = motionEvent.y
                     val distanceY = moveY - downY
-                    Log.i(
-                        "testtouchpage", "touch move->"
-                                + distanceX
-                                + " - " + distanceY
-                                + " - " + (topPage?.getView()?.measuredHeight ?: 0) / 12f
-                                + " - " + distanceX / distanceY
-                    )
+//                    Log.i(
+//                        "testtouchpage", "touch move->"
+//                                + distanceX
+//                                + " - " + distanceY
+//                                + " - " + (topPage?.getView()?.measuredHeight ?: 0) / 12f
+//                                + " - " + distanceX / distanceY
+//                    )
                     if (abs(distanceX) > 10 && abs(distanceX / distanceY) > 2f) {
                         handlePageMoving = true
                         downX = moveX
                         operationListener!!.onPageStartExit(topPage!!)
                         previousPage?.getView()?.apply {
                             translationX =
-                                -(measuredWidth / 3f)
+                                (-(areaWidth / 3f))
                                     .also { previousPageStartTranslation = it }
                         }
                         topPage?.getView()?.elevation = TOP_VIEW_ELEVATION
@@ -195,6 +195,13 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
     }
 
     private fun translatePage(distance: Float) {
+        Log.i(
+            "testtouchpage", "translatePage ->" + topPage
+                    + " - " + distance
+                    + " \n- " + previousPage
+                    + " - " + previousPageStartTranslation
+                    + " - " + previousPageStartTranslation + distance / 3
+        )
         topPage?.getView()?.translationX = distance
         previousPage?.getView()?.translationX = previousPageStartTranslation + distance / 3
     }
@@ -252,7 +259,8 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
     }
 
 
-    override fun preparePageExit(currentPage: IPage, previousPage: IPage?) = flow<Animator> {
+    override fun preparePageExit(currentPage: IPage, previousPage: IPage?) =
+        if (previousPage == null) null else flow<Animator> {
         isHandlingAnimation = true
         if (currentPage is SlidablePage)
             currentPage.beforeExitAnimation()

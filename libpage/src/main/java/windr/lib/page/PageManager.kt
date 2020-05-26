@@ -127,7 +127,8 @@ class PageManager(
             }
 
             override fun getPreviousPage(): IPage? {
-                return (if (pageList.size < 2) null else pageList[pageList.size - 2])!!
+                Log.i("testpagemanager", "getpreviouspage->$pageList ${pageList.size}")
+                return if (pageList.size < 2) null else pageList[pageList.size - 2]
             }
 
             override fun getCurrentPage(): IPage? {
@@ -227,7 +228,7 @@ class PageManager(
             pageContainer.removeView(currentPage.getView())
         }
         isHandlingTask = false
-        Log.i("PageLib","onBackPressed= $isHandlingBackEvent - $isHandlingTask " )
+        Log.i("PageLib", "onBackPressed= $isHandlingBackEvent - $isHandlingTask ")
 
         executeNext()
     }
@@ -312,7 +313,7 @@ class PageManager(
 
     private var isHandlingBackEvent = false
     fun onBackPressed(): Boolean {
-        Log.i("PageLib","onBackPressed= $isHandlingBackEvent - $isHandlingTask " )
+        Log.i("PageLib", "onBackPressed= $isHandlingBackEvent - $isHandlingTask ")
 
         if (isHandlingBackEvent || isHandlingTask) return true
         if (finishing || pageList.isEmpty()) return false
@@ -356,9 +357,10 @@ class PageManager(
     }
 
 
-companion object
+    companion object
 
 }
+
 class PageShowBuilder(val page: IPage) {
     var args: Bundle? = null
     var pageAnimation: IPageAnimation? = null

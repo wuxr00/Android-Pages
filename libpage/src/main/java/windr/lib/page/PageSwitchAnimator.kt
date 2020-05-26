@@ -2,6 +2,8 @@ package windr.lib.page
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.annotation.NonNull
@@ -29,7 +31,7 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
         var cacheAnimator = false
         var flow = pageAnimation?.prepareAnimation(enterPage, currentPage)
         if (flow != null)
-            cacheAnimator = true
+            cacheAnimator = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         else flow = switchAnimationGenerator?.prepareNextPageEnter(currentPage, enterPage)
         flow?.collect {
             if (cacheAnimator)
@@ -91,7 +93,14 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
                     launch { channel.send(Unit) }
                 }
             })
-            animator.start()
+            if (!reversed)
+                animator.start()
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                AnimatorSet().run {
+                    playTogether(animator)
+                    reverse()
+                }
+            else launch { channel.send(Unit) }
         } else launch { channel.send(Unit) }
         channel.receive()
     }
