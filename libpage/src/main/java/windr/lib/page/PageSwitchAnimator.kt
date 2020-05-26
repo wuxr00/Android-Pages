@@ -33,7 +33,7 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
         else flow = switchAnimationGenerator?.prepareNextPageEnter(currentPage, enterPage)
         flow?.collect {
             if (cacheAnimator)
-                pageAnimationCache.put(enterPage.hashCode(), it)
+                pageAnimationCache[enterPage.hashCode()] = it
             pWaitfor(enterPage.getView()!!).pToplay(it)
         }
     }

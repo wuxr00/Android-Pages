@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import windr.lib.page.*
+import windr.lib.page.demo.AndroidUtilities
 import windr.lib.page.demo.log
 import windr.lib.page.demo.toPX
 
@@ -38,6 +39,25 @@ class PagerPage1() : DefaultPage() {
                     }
                 })
                 requestLayout()
+            }
+
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                setMeasuredDimension(
+                    AndroidUtilities.customScreenWidth,
+                    AndroidUtilities.customScreenHeight
+                )
+                textView.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth,
+                        MeasureSpec.AT_MOST
+                    ), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                )
+                button.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth,
+                        MeasureSpec.AT_MOST
+                    ), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                )
             }
 
             override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

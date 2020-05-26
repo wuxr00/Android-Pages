@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import windr.lib.page.*
@@ -12,11 +13,15 @@ import windr.lib.page.demo.pages.MainPage
 import windr.lib.page.exts.DefaultDraggablePageSwitchGenerator
 
 class MainActivity : AppCompatActivity() {
-
+    private val defaultDraggablePageSwitchGenerator by lazy {
+        DefaultDraggablePageSwitchGenerator(
+            this@MainActivity
+        )
+    }
     private val pageManager by lazy {
         PageManager(this, layout).holdBackStack().apply {
             PageRouter.registerRouteReceiver(PageRouter.MAIN, this)
-            setPageSwitchAnimationGenerator(DefaultDraggablePageSwitchGenerator(this@MainActivity))
+            setPageSwitchAnimationGenerator(defaultDraggablePageSwitchGenerator)
         }
     }
 
@@ -24,8 +29,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidUtilities.initUtilties(this)
         setContentView(R.layout.activity_main)
+        layout.post {
 
-        PageManager add MainPage() toPageManager pageManager
+
+            PageManager add MainPage() toPageManager pageManager
+        }
 
 
     }

@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface IPageSwitchAnimationGenerator {
     fun setPageSwitchOperationListener(operationListener: IPageSwitchGeneratorOperation)
 
-    fun prepareNextPageEnter(currentPage: IPage?, nextPage: IPage): Flow<Animator>
+    fun prepareNextPageEnter(currentPage: IPage?, nextPage: IPage): Flow<Animator>?
 
-    fun preparePageExit(currentPage: IPage, previousPage: IPage?): Flow<Animator>
+    fun preparePageExit(currentPage: IPage, previousPage: IPage?): Flow<Animator>?
 
 }

@@ -270,6 +270,61 @@ class RedAnimPage : DefaultPage() {
                 })
             }
 
+
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                setMeasuredDimension(
+                    AndroidUtilities.customScreenWidth,
+                    AndroidUtilities.customScreenHeight
+                )
+                textView.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth,
+                        MeasureSpec.AT_MOST
+                    ), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                )
+                redButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+                redAnimButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+                greenButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+                greenAnimButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+                blueButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+                blueAnimButton.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth / 2,
+                        MeasureSpec.AT_MOST
+                    )
+                    , MeasureSpec.makeMeasureSpec(45.toPX(), MeasureSpec.EXACTLY)
+                )
+            }
             override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
                 back.layout(
                     16.toPX(),

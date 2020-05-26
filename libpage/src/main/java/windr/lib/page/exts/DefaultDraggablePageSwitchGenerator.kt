@@ -204,16 +204,17 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
         //        operationListener.getCoverView().setBackgroundColor(Color.argb());
     }
 
-    override fun prepareNextPageEnter(currentPage: IPage?, nextPage: IPage) = flow<Animator> {
-        isHandlingAnimation = true
-        if (nextPage is SlidablePage)
-            if (currentPage is SlidablePage)
-                currentPage.beforeEnterAnimation()
+    override fun prepareNextPageEnter(currentPage: IPage?, nextPage: IPage) =
+        if (currentPage == null) null else flow<Animator> {
+
+            isHandlingAnimation = true
+            if (nextPage is SlidablePage)
+                nextPage.beforeEnterAnimation()
                     .collect {
                         emit(it ?: getDefaultEnterAnimation(nextPage, currentPage))
                     }
             else emit(getDefaultEnterAnimation(nextPage, currentPage))
-    }
+        }
 
     private fun getDefaultEnterAnimation(
         nextPage: IPage,
@@ -221,12 +222,13 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
     ): AnimatorSet {
         return AnimatorSet().apply {
             nextPage.getView()?.run {
-                translationX = areaWidth
-                elevation = TOP_VIEW_ELEVATION
+                this.translationX = areaWidth
+                this.elevation = TOP_VIEW_ELEVATION
                 val nextAnim = ObjectAnimator.ofFloat(
                     this, View.TRANSLATION_X
                     , this.translationX, 0f
-                ).setDuration(350)
+                ).setDuration(400)
+                Log.i("testpageanimdef", "enter-> $areaWidth")
                 if (currentPage == null)
                     this@apply.playTogether(nextAnim)
                 else
@@ -235,7 +237,7 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
                         ObjectAnimator.ofFloat(
                             currentPage.getView(), View.TRANSLATION_X
                             , 0f, -(areaWidth / 3f)
-                        ).setDuration(500)
+                        ).setDuration(400)
                     )
                 this@apply.interpolator = DecelerateInterpolator()
                 this@apply.p_onAnimEnd {
@@ -243,6 +245,7 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
                     this@run.elevation = 0F
                     currentPage?.getView()?.translationX = 0F
                     isHandlingAnimation = false
+                    Log.i("testpageanimdef", "enter end-> ")
                 }
             }
         }
@@ -268,7 +271,7 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
                 val currentAnim = ObjectAnimator.ofFloat(
                     this, View.TRANSLATION_X
                     , this.translationX, areaWidth
-                ).setDuration(300)
+                ).setDuration(400)
                 if (previousPage == null)
                     this@apply.playTogether(currentAnim)
                 else
@@ -277,13 +280,15 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
                         ObjectAnimator.ofFloat(
                             previousPage.getView(), View.TRANSLATION_X
                             , previousStartTranslationX, 0f
-                        ).setDuration(500)
+                        ).setDuration(400)
                     )
                 this@apply.interpolator = AccelerateDecelerateInterpolator()
                 this@apply.p_onAnimEnd {
-                    this@run.translationX = 0f
                     previousPage?.getView()?.translationX = 0F
                     isHandlingAnimation = false
+                    postDelayed({
+                        this@run.translationX = 0f
+                    }, 10)
                 }
             }
         }

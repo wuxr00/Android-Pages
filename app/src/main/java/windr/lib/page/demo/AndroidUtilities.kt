@@ -93,8 +93,15 @@ object AndroidUtilities {
     fun refreshScreenSize(holder: Activity) {
         _refreshScreenSize()
         val contentView = holder.window.decorView.findViewById<View>(R.id.content)
-        if (customScreenHeight != contentView.height)
-            customScreenHeight = contentView.height
+        fun checkCustomViewHeight() {
+            if (customScreenHeight != contentView.height)
+                customScreenHeight = contentView.height
+        }
+        if (contentView.height == 0)
+            contentView.post {
+                checkCustomViewHeight()
+            }
+        else checkCustomViewHeight()
     }
 
 
@@ -539,17 +546,17 @@ private fun setMeizuStatusBarDarkIcon(
 
 fun Any.log(msg: CharSequence?, tag: String = "") {
     if (BuildConfig.DEBUG)
-        Log.i(if(tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
+        Log.i(if (tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
 }
 
 fun Any.logW(msg: CharSequence?, tag: String = "") {
     if (BuildConfig.DEBUG)
-        Log.w(if(tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
+        Log.w(if (tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
 }
 
 fun Any.logE(msg: CharSequence?, tag: String = "") {
     if (BuildConfig.DEBUG)
-        Log.e(if(tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
+        Log.e(if (tag.isBlank()) this.javaClass.simpleName else tag, msg.toString())
 }
 
 //todo========================================动画===========================================

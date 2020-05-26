@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import windr.lib.page.*
+import windr.lib.page.demo.AndroidUtilities
 import windr.lib.page.demo.toPX
 
 class PagerPage3 : DefaultPage() {
@@ -38,10 +39,28 @@ class PagerPage3 : DefaultPage() {
                 })
             }
 
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                setMeasuredDimension(
+                    AndroidUtilities.customScreenWidth,
+                    AndroidUtilities.customScreenHeight
+                )
+                textView.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth,
+                        MeasureSpec.AT_MOST
+                    ), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                )
+                button.measure(
+                    MeasureSpec.makeMeasureSpec(
+                        AndroidUtilities.customScreenWidth,
+                        MeasureSpec.AT_MOST
+                    ), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                )
+            }
             override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-                super.onLayout(changed, left, top, right, bottom)
-                val centerX = right / 2
-                val centerY = bottom / 2
+//                super.onLayout(changed, left, top, right, bottom)
+                val centerX =measuredWidth / 2
+                val centerY = measuredHeight / 2
                 button.layout(
                     -button.measuredWidth / 2 + centerX
                     , centerY - 8.toPX() - button.measuredHeight

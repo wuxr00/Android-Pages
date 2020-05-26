@@ -55,7 +55,7 @@ class PageManager(
 
     private fun executeNext() {
         if (finishing) return
-        isHandlingTask = true
+//        isHandlingTask = true
         launch { mainChannel.receive().run() }
     }
 
@@ -227,6 +227,8 @@ class PageManager(
             pageContainer.removeView(currentPage.getView())
         }
         isHandlingTask = false
+        Log.i("PageLib","onBackPressed= $isHandlingBackEvent - $isHandlingTask " )
+
         executeNext()
     }
 
@@ -310,6 +312,8 @@ class PageManager(
 
     private var isHandlingBackEvent = false
     fun onBackPressed(): Boolean {
+        Log.i("PageLib","onBackPressed= $isHandlingBackEvent - $isHandlingTask " )
+
         if (isHandlingBackEvent || isHandlingTask) return true
         if (finishing || pageList.isEmpty()) return false
 
