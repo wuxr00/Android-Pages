@@ -27,12 +27,25 @@ class PageManager(
     private val TASK_TYPE_OPEN = 0
     private val TASK_TYPE_CLOSE = 1
 
+    /**
+     * CoverView添加位置*/
     private val TOP = -1
     private val SECOND = -2
 
+    /**
+     * activity正在销毁（finish)*/
     private var finishing = false
+
+    /**
+     * 页面数组*/
     private val pageList = LinkedList<IPage>()
+
+    /**
+     * 是否处理activity的回退按钮事件*/
     private var holdBackStack = false
+
+    /**
+     * 页面切换动画执行类*/
     private val pageSwitchAnimator by lazy { PageSwitchAnimator(this) }
     private val coverView by lazy {
         CoverView(holder!!, object : CoverHolder {
@@ -41,21 +54,28 @@ class PageManager(
             }
         })
     }
-    private var taskSort = 0
+
+    /**
+     * 正在处理任务状态*/
     private var isHandlingTask = false
+
+    /**
+     * 新任务发布、接收者*/
     private val mainChannel by lazy { Channel<PageTask>() }
 
-    private val waitingTasks: Queue<PageTask> = PriorityQueue(
-        2,
-        Comparator { o1: PageTask, o2: PageTask ->
-            val typePriority = o1.type - o2.type
-            if (typePriority == 0) o1.sort - o2.sort else typePriority
-        }
-    )
+    private var taskSort = 0
+//    private val waitingTasks: Queue<PageTask> = PriorityQueue(
+//        2,
+//        Comparator { o1: PageTask, o2: PageTask ->
+//            val typePriority = o1.type - o2.type
+//            if (typePriority == 0) o1.sort - o2.sort else typePriority
+//        }
+//    )
 
+    /**
+     * 执行或等待下一个任务*/
     private fun executeNext() {
         if (finishing) return
-//        isHandlingTask = true
         launch { mainChannel.receive().run() }
     }
 
@@ -64,6 +84,8 @@ class PageManager(
         return this
     }
 
+    /**
+     * activity生命周期监听*/
     private val holderLifecycleObserver: LifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         fun onCreate(owner: LifecycleOwner?) {
@@ -83,7 +105,7 @@ class PageManager(
         fun onDestroy(owner: LifecycleOwner?) {
             finishing = true
             cancel()
-            waitingTasks.clear()
+//            waitingTasks.clear()
             pageSwitchAnimator.destroy()
             for (i in pageList.indices) {
                 val page = pageList[i]
@@ -96,6 +118,9 @@ class PageManager(
             holder = null
         }
     }
+
+    /**
+     * 默认切换动画提供器回调PageManager相关操作*/
     private val pageSwitchGeneratorOperation: IPageSwitchGeneratorOperation =
         object : IPageSwitchGeneratorOperation {
             override fun onPageStartExit(page: IPage) {
@@ -136,6 +161,8 @@ class PageManager(
             }
         }
 
+    /**
+     * 改变CoverView层级*/
     private fun moveCoverView(index: Int) {
         (coverView.parent as? ViewGroup)?.removeView(coverView)
         if (pageContainer.childCount == 0) return
@@ -166,6 +193,8 @@ class PageManager(
         pageSwitchAnimator.switchAnimationGenerator = pageSwitchAnimationGenerator
     }
 
+    /**
+     * 添加显示页面*/
     fun addPage(newPage: IPage, args: Bundle?) {
         this.addPage(newPage, args, null)
     }
@@ -190,6 +219,8 @@ class PageManager(
             executeNext()
     }
 
+    /**
+     * 执行添加动作*/
     private fun doAdd(
         newPage: IPage,
         args: Bundle?,
@@ -209,12 +240,15 @@ class PageManager(
             }
             val currentPage = pageList.peekLast()
             pageList.addLast(newPage)
+            //执行进入动画
             pageSwitchAnimator.playEnterAnimation(currentPage, newPage, enterAnimation)
             endOpen(newPage, currentPage)
         }
 
     }
 
+    /**
+     * 添加操作执行完*/
     private fun endOpen(newPage: IPage, currentPage: IPage?) {
         Log.i(
             PageManager::class.java.simpleName, """endOpen-finishing=$finishing
@@ -233,6 +267,8 @@ class PageManager(
         executeNext()
     }
 
+    /**
+     * 删除页面*/
     fun removePage(page: IPage) {
         this.removePage(page, null)
     }
@@ -255,6 +291,8 @@ class PageManager(
             executeNext()
     }
 
+    /**
+     * 执行删除操作*/
     private fun doRemove(page: IPage, exitAnimation: IPageAnimation?) {
         launch {
             var previousPage: IPage? = null
@@ -270,6 +308,7 @@ class PageManager(
                         } else if (pageContainer.indexOfChild(coverView)
                             != pageContainer.childCount - 2
                         ) moveCoverView(SECOND)
+                        //执行退出动画
                         pageSwitchAnimator.playExitAnimation(page, it, exitAnimation)
                     }
                 } else {
@@ -281,6 +320,8 @@ class PageManager(
         }
     }
 
+    /**
+     * 删除结束*/
     private fun endRemove(
         page: IPage,
         previousPage: IPage?
@@ -293,6 +334,8 @@ class PageManager(
     }
 
 
+    /**
+     * 页面退出*/
     private fun onPageExit(page: IPage) {
         page.hide()
         page.destroy()
@@ -306,11 +349,15 @@ class PageManager(
         return true
     }
 
+    /**
+     * 处理拦截acitivity触摸传递，需要在activity.dispatchTouchEvent(ev:MotionsEvent)中加入该方法*/
     fun handleTouchEvent(motionEvent: MotionEvent?): Boolean {
         return (isHandlingTask
                 || isHandlingBackEvent)
     }
 
+    /**
+     * 处理/拦截activity回退按钮事件,需要在activity.onBackPressed()中添加该方法*/
     private var isHandlingBackEvent = false
     fun onBackPressed(): Boolean {
         Log.i("PageLib", "onBackPressed= $isHandlingBackEvent - $isHandlingTask ")

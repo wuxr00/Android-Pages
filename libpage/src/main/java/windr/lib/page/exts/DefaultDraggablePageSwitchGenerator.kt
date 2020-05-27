@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import windr.lib.page.IPage
@@ -261,14 +260,14 @@ class DefaultDraggablePageSwitchGenerator(context: Context) : IPageSwitchAnimati
 
     override fun preparePageExit(currentPage: IPage, previousPage: IPage?) =
         if (previousPage == null) null else flow<Animator> {
-        isHandlingAnimation = true
-        if (currentPage is SlidablePage)
-            currentPage.beforeExitAnimation()
-                .collect {
-                    emit(it ?: getDefaultExitAnimation(currentPage, previousPage))
-                }
-        else emit(getDefaultExitAnimation(currentPage, previousPage))
-    }
+            isHandlingAnimation = true
+            if (currentPage is SlidablePage)
+                currentPage.beforeExitAnimation()
+                    .collect {
+                        emit(it ?: getDefaultExitAnimation(currentPage, previousPage))
+                    }
+            else emit(getDefaultExitAnimation(currentPage, previousPage))
+        }
 
     fun getDefaultExitAnimation(currentPage: IPage, previousPage: IPage?): AnimatorSet {
         return AnimatorSet().apply {

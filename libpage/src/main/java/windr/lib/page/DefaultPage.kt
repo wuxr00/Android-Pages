@@ -1,20 +1,20 @@
 package windr.lib.page
 
-import android.animation.Animator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 
+/**
+ * 默认页面基类*/
 abstract class DefaultPage : IPage {
     var pageManager: PageManager? = null
     var arguments: Bundle? = null
     var isShown = false
         private set
-     var contentView: View? = null
+    var contentView: View? = null
         protected set
     protected var isFinishing = false
 
@@ -66,10 +66,12 @@ abstract class DefaultPage : IPage {
     protected open fun onHide() {}
     protected open fun onDestroy() {}
 
-    open override fun onFinishing() {
+    override fun onFinishing() {
         isFinishing = true
     }
 
+    /**
+     * activity结果返回接收处理*/
     open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean = false
 
 }

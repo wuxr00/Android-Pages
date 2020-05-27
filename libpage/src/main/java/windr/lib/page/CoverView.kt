@@ -5,6 +5,8 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager
 
+/**
+ * 两个页面之间的隔层视图，阻挡触摸事件传递到下层页面，可设置背景色*/
 class CoverView(context: Context, var coverHolder: CoverHolder) :
     View(context) {
     var coverWidth: Int = 0

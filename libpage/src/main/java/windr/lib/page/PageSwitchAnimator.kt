@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.annotation.NonNull
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -23,6 +21,8 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
     val pageAnimationCache = HashMap<Int, Animator>()
 
 
+    /**
+     * 执行进入动画*/
     suspend fun playEnterAnimation(
         currentPage: IPage?,
         enterPage: IPage,
@@ -41,6 +41,8 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
     }
 
 
+    /**
+     * 执行退出动画*/
     suspend fun playExitAnimation(
         currentPage: IPage,
         previousPage: IPage?,
@@ -57,12 +59,16 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
     }
 
 
+    /**
+     * 销毁*/
     fun destroy() {
         manager = null
         switchAnimationGenerator = null
         pageAnimationCache.clear()
     }
 
+    /**
+     * 等待view加载完毕*/
     private suspend fun pWaitfor(view: View): PageSwitchAnimator {
         val channel = Channel<Unit>()
         view.viewTreeObserver.addOnGlobalLayoutListener(
@@ -79,6 +85,8 @@ class PageSwitchAnimator(@NonNull private var manager: PageManager?) :
         return this
     }
 
+    /**
+     * 执行动画*/
     private suspend fun pToplay(animator: Animator?, reversed: Boolean = false) {
         val channel = Channel<Unit>()
         if (animator != null) {
